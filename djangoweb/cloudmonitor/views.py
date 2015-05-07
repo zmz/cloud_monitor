@@ -3,6 +3,11 @@ from django.template import RequestContext
 from django.shortcuts import render
 
 from . import dataprocessor
+from forms import ImageFilterForm
+
+import time
+
+import pdb
 
 
 # Create your views here.
@@ -10,22 +15,58 @@ from . import dataprocessor
 
 fileName = '/home/zhangxg/work/temp/yyyy.json'
 
-
 def index(request):
-    x_axis = ['2011Sep21','2011Oct5','2011Oct20','2011Nov5','2011Nov10','2011Nov14','2011Nov18','2011Nov21','2011Dec1','2011Dec2', '2011Dec3']
-    x_string = '['
-    for item in x_axis:
-        x_string += '\'' + item + "\',"
-    x_string = x_string[0:x_string.__len__()-1] + ']'
-
-    y_axis = [1,6,5,6,3,1,7,10,11,2, 100]
-    context = RequestContext(request, {'x_axis': x_string, 'y_axis': y_axis})
-    return render(request, 'chartIndex.html', context)
 
 
-def getDiscInfo(request):
-    disk_name = "1ab42e12-47f8-40b8-9e56-6fcc6833f032"
-    series = dataprocessor.process_json(fileName, disk_name)
+    if request.method == 'POST':
+        # post_info = []
+
+        paras = {}
+        error_message = []
+
+        # paras['imageid'] = request.POST.get('imageid')
+
+        if request.POST.get('timestart'):
+            try:
+                paras['timestart'] = time.strptime(request.POST.get('timestart'), '%Y-%m-%d')
+            except TypeError:
+                error_message.append("can not convert %s to a datetime" % request.POST.get('timestart'))
+        if request.POST.get('timeend'):
+            try:
+                paras['timeend'] = time.strptime(request.POST.get('timeend'),'%Y-%m-%d')
+            except TypeError:
+                error_message.append("can not convert %s to a datetime" % request.POST.get('timeend'))
+
+        if paras.get('timestart') and paras.get('timeend') and paras.get('timestart') > paras.get('timeend'):
+            error_message.append('starttime' + request.POST.get('timestart') + ' is later than the end time ' + request.POST.get('timeend'))
+
+        if request.POST.get('frequency'):
+            try:
+                paras['frequency'] = int(request.POST.get('frequency'))
+            except ValueError:
+                error_message.append('frequency should be integer')
+
+        if error_message.__len__() > 0:
+            data = dataprocessor.loadData(fileName)
+            imageIds = dataprocessor.getImageList(data)
+            context = RequestContext(request, {'imageIdList': imageIds,'postinfo': paras, 'error_message': error_message})
+            return render(request, 'index.html', context)
+        else:
+            return getDiscInfoByPara(request, request.POST.get('imageid'), timestart=paras.get('timestart'), timeend=paras.get('timeend'), frequency=paras.get('frequency'))
+    else:
+        data = dataprocessor.loadData(fileName)
+        imageIds = dataprocessor.getImageList(data)
+        context = RequestContext(request, {'imageIdList': imageIds})
+        return render(request, 'index.html', context)
+
+
+def getDiscInfoByPara(request, disk_name, **paras):
+    data = dataprocessor.loadData(fileName)
+    series = dataprocessor.getTimeSeriesDetail(data, disk_name, frequency=paras.get('frequency'))
+
+    timestart = str(series.index[0])
+    timeend = str(series.index[series.index.__len__() - 1])
+
     x_axis_string = "["
     for index in series.index:
         x_axis_string += '\'' + str(index) + "\',"
@@ -35,5 +76,5 @@ def getDiscInfo(request):
     for value in series.values:
         y_axis.append(value)
 
-    context = RequestContext(request, {'legend_title': "[\'" + disk_name + "\']", 'x_axis': x_axis_string, 'y_axis': y_axis})
-    return render(request, 'chartIndex.html', context)
+    context = RequestContext(request, {'legend_title': "[\'" + disk_name + "\']", 'x_axis': x_axis_string, 'y_axis': y_axis, 'imageIdList':data.keys, 'imageid': disk_name, 'timestart': timestart, 'timeend': timeend})
+    return render(request, 'index.html', context)

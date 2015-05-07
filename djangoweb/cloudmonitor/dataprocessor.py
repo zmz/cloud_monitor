@@ -3,12 +3,9 @@ __author__ = 'zhangxg'
 import json
 import pandas as pd
 
-def process_json(pathToFile, discName):
-    data = json.load(open(pathToFile, 'r', 100))
-    keys = data.keys()
+def getTimeSeriesDetail(data, discName, **kwargs):
     time_serials = []
     values = []
-
     element = data[discName]
     for point in element['list']:
         try:
@@ -17,7 +14,24 @@ def process_json(pathToFile, discName):
         except TypeError:
             pass
 
-    return pd.Series(values, index=pd.to_datetime(time_serials)).sort_index()
+    if kwargs.get('frequency'):
+        return pd.Series(values, index=pd.to_datetime(time_serials)).sort_index().resample(str(kwargs.get('frequency')) + 'Min', how='mean')
+    else:
+        return pd.Series(values, index=pd.to_datetime(time_serials)).sort_index()
+
+
+def getImageSummary(data, discName):
+    #todo
+    pass
+
+
+def getImageList(data):
+    return data.keys
+
+
+def loadData(pathToFile):
+    return json.load(open(pathToFile, 'r', 100))
+
 
     # for index in pandas_serial.index:
     #     print(index)
@@ -27,7 +41,7 @@ def process_json(pathToFile, discName):
 
 
 fileName = '/home/zhangxg/work/temp/yyyy.json'
-print(process_json(fileName, "1ab42e12-47f8-40b8-9e56-6fcc6833f032"))
+print(getTimeSeriesDetail(loadData(fileName), "1ab42e12-47f8-40b8-9e56-6fcc6833f032"))
 
 
 

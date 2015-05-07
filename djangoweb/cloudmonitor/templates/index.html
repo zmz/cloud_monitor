@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Lenovo Cloud Monitor</title>
+    {% load staticfiles %}
+    <script src="{% static 'js/eCharts/echarts-all.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css" />
+</head>
+<body>
+
+<div id="navigation">
+    {% for image in imageIdList%}
+        <li><a href="/cloudmonitor/chart/disc/{{ image }}/">{{ image }}</a></li>
+    {% endfor %}
+</div>
+
+<div id="summary">
+    <div id="error_div">
+        {% if error_message%}
+            {% for message in error_message%}
+                <p style="color: red;"> {{message}} </p>
+            {% endfor%}
+        {% endif%}
+    </div>
+<form action="/cloudmonitor/chart/disc/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="imageid" value="{{imageid}}">
+    TimeStart: <input type="text" name="timestart" value={{timestart}}>, TimeEnd: <input type="text" name="timeend" value={{timeend}}>
+    <br />
+    Fequency:<input type="text" name="frequency" value={{frequency}}>(Minutes)
+    <br/>
+    <input type="submit", value="Confirm">
+</form>
+</div>
+<div id="graph" ></div>
+<div id="detail">c
+        {{postinfo}}
+</div>
+<script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('graph'));
+                 option = {
+                    title : {
+                        text: 'Lenovo Monitor Disc',
+                        subtext: ''
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:{{legend_title | safe}}
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : {{ x_axis | safe }}
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value} /s'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'IO/s ',
+                            type:'line',
+                            data:{{y_axis}},
+                            smooth:true,
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: 'Average'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+
+        myChart.setOption(option);
+
+</script>
+
+</body>
+</html>
