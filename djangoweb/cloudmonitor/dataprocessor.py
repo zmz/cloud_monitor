@@ -3,6 +3,8 @@ __author__ = 'zhangxg'
 import json
 import pandas as pd
 
+from ceilometer import extract, cfg
+
 def getTimeSeriesDetail(data, discName, **kwargs):
     time_serials = []
     values = []
@@ -33,17 +35,9 @@ def loadData(pathToFile):
     return json.load(open(pathToFile, 'r', 100))
 
 
-    # for index in pandas_serial.index:
-    #     print(index)
-    #
-    # print(pandas_serial.index)
-    # print(pandas_serial.values)
+# result = extract.extract(cfg.TIME_BEGIN, cfg.TIME_END, "cpu")
 
-
-fileName = '/home/zhangxg/work/temp/yyyy.json'
-print(getTimeSeriesDetail(loadData(fileName), "1ab42e12-47f8-40b8-9e56-6fcc6833f032"))
-
-
+# print(result.keys())
 
 
 

@@ -5,85 +5,86 @@
     <title>Lenovo Cloud Monitor</title>
     {% load staticfiles %}
     <script src="{% static 'js/eCharts/echarts-all.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery-2.1.3.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery.easyui.min.js' %}"></script>
+    <script src="{% static 'js/drawingtool.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/easyui/themes/default/easyui.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/easyui/themes/icon.css' %}" type="text/css" />
+
+    <!-- <script type="text/javascript">
+		$(document).ready(function() {
+			$("button").click(function() {
+				$.ajax({
+					type : "GET",
+					url : "/cloudmonitor/chart/disc/detail/",
+					// data : "{}",
+					contentType : "application/json; charset=utf-8",
+					dataType : "json",
+					async : true,
+					//cache : false,
+					success : function(msg) {
+						$('div#detail').text(msg.name);
+					}
+				})
+			});
+		});
+	</script> -->
+
 </head>
 <body>
 
 <div id="navigation">
-    {% for image in imageIdList%}
-        <li><a href="/cloudmonitor/chart/disc/{{ image }}/">{{ image }}</a></li>
+    <!-- <button type="button">Click me</button> -->
+    <ol>
+    {% for resource_id in imageIdList%}
+        <li><a href="/cloudmonitor/dashboard/detail/{{ resource_id }}/">{{ resource_id }}</a></li>
     {% endfor %}
+    </ol>
 </div>
 
 <div id="summary">
     <div id="error_div">
-        {% if error_message%}
-            {% for message in error_message%}
-                <p style="color: red;"> {{message}} </p>
+        {% if page_data.form_errors%}
+            {% for message in page_data.form_errors%}
+                <li style="color: red;"> {{message}} </li>
             {% endfor%}
         {% endif%}
     </div>
-<form action="/cloudmonitor/chart/disc/" method="post">
+<form action="/cloudmonitor/dashboard/search/" method="post">
     {% csrf_token %}
-    <input type="hidden" name="imageid" value="{{imageid}}">
-    TimeStart: <input type="text" name="timestart" value={{timestart}}>, TimeEnd: <input type="text" name="timeend" value={{timeend}}>
+    <input type="hidden" name="resource_id" value="{{resource_id}}">
+    Type
+    <select name="type">
+    	<option value="cpu">cpu</option>
+    	<option value="disk_write">disk_write</option>
+    	<option value="disk_read">disk_read</option>
+    	<option value="memory">memory</option>
+    	<option value="network_in">network_in</option>
+    	<option value="network_out">network_out</option>
+    </select>
+    TimeStart: <input name="timestart" class="easyui-datetimespinner" value="2015-03-19 18:30" style="width:180px">
+    TimeEnd:   <input name="timeend" class="easyui-datetimespinner" value="2015-03-20 19:20" style="width:180px">
     <br />
-    Fequency:<input type="text" name="frequency" value={{frequency}}>(Minutes)
-    <br/>
+    Fequency:<input type="text" name="frequency" value={{page_data.form_paras.frequency}}>(Minutes)
+    <br />
     <input type="submit", value="Confirm">
 </form>
 </div>
-<div id="graph" ></div>
-<div id="detail">c
-        {{postinfo}}
+<div id="graph" >
+    <script type="text/javascript" >
+        {% if legend_title %}
+            draw({{legend_title | safe}}, {{ x_axis | safe }}, {{y_axis}});
+        {% endif %}
+    </script>
+
 </div>
-<script type="text/javascript">
-        var myChart = echarts.init(document.getElementById('graph'));
-                 option = {
-                    title : {
-                        text: 'Lenovo Monitor Disc',
-                        subtext: ''
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:{{legend_title | safe}}
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            boundaryGap : false,
-                            data : {{ x_axis | safe }}
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value} /s'
-                            }
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'IO/s ',
-                            type:'line',
-                            data:{{y_axis}},
-                            smooth:true,
-                            markLine : {
-                                data : [
-                                    {type : 'average', name: 'Average'}
-                                ]
-                            }
-                        }
-                    ]
-                };
+<div id="detail">
+        Extend from $.fn.panel.defaults. Override defaults with $.fn.datagrid.defaults.
 
-        myChart.setOption(option);
+The datagrid displays data in a tabular format and offers rich support to select, sort, group and edit data. The datagrid has been designed to reduce development time and to require no specific knowledge from developers. It is both featherweight and feature-rich. Cell merging, multi-column headers, frozen columns and footers are just a few of its features. 
+</div>
 
-</script>
 
 </body>
 </html>
