@@ -12,30 +12,10 @@
     <link rel="stylesheet" href="{% static 'css/easyui/themes/default/easyui.css' %}" type="text/css" />
     <link rel="stylesheet" href="{% static 'css/easyui/themes/icon.css' %}" type="text/css" />
 
-    <!-- <script type="text/javascript">
-		$(document).ready(function() {
-			$("button").click(function() {
-				$.ajax({
-					type : "GET",
-					url : "/cloudmonitor/chart/disc/detail/",
-					// data : "{}",
-					contentType : "application/json; charset=utf-8",
-					dataType : "json",
-					async : true,
-					//cache : false,
-					success : function(msg) {
-						$('div#detail').text(msg.name);
-					}
-				})
-			});
-		});
-	</script> -->
-
 </head>
 <body>
 
 <div id="navigation">
-    <!-- <button type="button">Click me</button> -->
     <ol>
     {% for resource_id in imageIdList%}
         <li><a href="/cloudmonitor/dashboard/detail/{{ resource_id }}/">{{ resource_id }}</a></li>
