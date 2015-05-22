@@ -17,8 +17,8 @@
 
 <div id="navigation">
     <ol>
-    {% for resource_id in imageIdList%}
-        <li><a href="/cloudmonitor/dashboard/detail/{{ resource_id }}/">{{ resource_id }}</a></li>
+    {% for resource in resource_list%}
+        <li><a href="/cloudmonitor/dashboard/detail/{{ resource.resource_id }}/">{{ resource.display_name }}</a></li>
     {% endfor %}
     </ol>
 </div>
@@ -43,10 +43,10 @@
     	<option value="network_in">network_in</option>
     	<option value="network_out">network_out</option>
     </select>
-    TimeStart: <input name="timestart" class="easyui-datetimespinner" value="2015-03-19 18:30" style="width:180px">
-    TimeEnd:   <input name="timeend" class="easyui-datetimespinner" value="2015-03-20 19:20" style="width:180px">
+    TimeStart: <input name="timestart" class="easyui-datetimespinner" value="{{ timestart }}" style="width:180px">
+    TimeEnd:   <input name="timeend" class="easyui-datetimespinner" value="{{ timeend }}" style="width:180px">
     <br />
-    Fequency:<input type="text" name="frequency" value={{page_data.form_paras.frequency}}>(Minutes)
+    Fequency:<input type="text" name="frequency" value="{{page_data.form_paras.frequency}}">(Minutes)
     <br />
     <input type="submit", value="Confirm">
 </form>
