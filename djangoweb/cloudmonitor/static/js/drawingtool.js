@@ -1,11 +1,11 @@
 
-function draw(legend, xAxis, yAxis){
+function draw(title, legend, xAxis, yAxis){
 
     var myChart = echarts.init(document.getElementById('graph'));
 
     option = {
         title : {
-            text: 'Lenovo Monitor Disc',
+            text: title,
             subtext: ''
         },
         tooltip : {
@@ -24,10 +24,10 @@ function draw(legend, xAxis, yAxis){
         ],
         yAxis : [
             {
-                type : 'value',
-                axisLabel : {
-                    formatter: '{value} /s'
-                }
+                type : 'value'
+//                axisLabel : {
+//                    formatter: '{value} /s'
+//                }
             }
         ],
         series : [
@@ -47,24 +47,4 @@ function draw(legend, xAxis, yAxis){
 
     myChart.setOption(option);
 }
-
-//function ajaxLoading(imageid){
-//
-//    alert(imageid)
-//
-//    var xmlhttp;
-//    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-//        xmlhttp = new XMLHttpRequest();
-//    } else {// code for IE6, IE5
-//        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-//    }
-//    xmlhttp.onreadystatechange = function() {
-//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//            document.getElementById("datail").innerHTML = xmlhttp.responseText;
-//        }
-//    }
-//    xmlhttp.open("get", imageid + "/", false);
-//    xmlhttp.send(null);
-//
-//}
 

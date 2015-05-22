@@ -54,7 +54,7 @@
 <div id="graph" >
     <script type="text/javascript" >
         {% if legend_title %}
-            draw({{legend_title | safe}}, {{ x_axis | safe }}, {{y_axis}});
+            draw({{graph_title | safe}},{{legend_title | safe}}, {{ x_axis | safe }}, {{y_axis}});
         {% endif %}
     </script>
 
