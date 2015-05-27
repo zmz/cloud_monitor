@@ -15,9 +15,11 @@ import pdb
 
 # Create your views here.
 
+fileName = '/home/zhangxg/work/temp/tenents_sample.json'
 
-fileName = '/home/zhangxg/work/temp/openstack_prod_20150517_0518_2.data'
+data = json.load(open(fileName, 'r'))
 
+response_kwargs = {'content_type': 'application/json'}
 
 page_data = {};
 
@@ -25,16 +27,22 @@ page_data = {};
 def get_tenents(request):
     tenents = ['665385cb8b17478fa20946fcebcfa832', '665385cb8b17478fa20946fcebcfa832', '12345678', 'abcd']
     context = {'tenents': tenents}
-    response_kwargs = {}
-    response_kwargs['content_type'] = 'application/json'
     return HttpResponse(json.dumps(context), **response_kwargs)
     # return render(request, 'index4py.html', context)
 
 def get_tenent_detail(request, tenent_name):
-    context = {'name': 'zhang', 'tenentName': tenent_name}
-    response_kwargs = {}
-    response_kwargs['content_type'] = 'application/json'
-    return HttpResponse(json.dumps(context), **response_kwargs)
+    # context = {'data':data}
+    data_array = []
+
+    # pdb.set_trace()
+
+    for key in data.keys():
+        vm = {
+            'vm_id': key,
+            'detail': data.get(key)
+        }
+        data_array.append(vm)
+    return HttpResponse(json.dumps(data_array), **response_kwargs)
 
 
 

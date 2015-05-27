@@ -1,7 +1,8 @@
 /**
  * @author zhangxg
  */
-function drawCpuGraph(graphHolder, row, data) {
+
+function drawGraph(graphHolder, seriesLabels, xAxis, yAxis, unit) {
 	var myChart = echarts.init(graphHolder);
 
 	option = {
@@ -13,21 +14,21 @@ function drawCpuGraph(graphHolder, row, data) {
 			trigger : 'axis'
 		},
 		legend : {
-			data : ['Temp']
+			data : seriesLabels
 		},
 		calculable : true,
 		xAxis : [{
 			type : 'category',
 			boundaryGap : false,
-			data : ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+			data : xAxis
 		}],
 		yAxis : [{
 			type : 'value'
 		}],
 		series : [{
-			name : 'IO/s ',
+			name : unit,
 			type : 'line',
-			data : [1, -2, 2, 5, 3, 2, 0],
+			data : yAxis,
 			smooth : true,
 			markLine : {
 				data : [{
@@ -41,12 +42,45 @@ function drawCpuGraph(graphHolder, row, data) {
 	myChart.setOption(option);
 }
 
-function drawMemeoryGraph() {
+function drawCpuGraph(data) {
+	
+	for(var i = 0; i < data.length; i++) {
+		var graphHolder = document.getElementById(i+"cpu");
+		
+		var detail = data[i].detail.cpu_util;
+		var unit = detail.counter_unit;
+		var timestamps = detail.timestamp;
+		
+		var xAxis = new Array();
+		var yAxis = new Array();
+		for (var j = 0; j < timestamps.length; j++){
+			xAxis[j] = timestamps[j][0];
+			yAxis[j] = timestamps[j][1];
+		}
+		drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+	}
+}
 
+function drawMemeoryGraph(data) {
+	for(var i = 0; i < data.length; i++) {
+		var graphHolder = document.getElementById(i+"mem");
+		
+		var detail = data[i].detail.memory_usage;
+		var unit = detail.counter_unit;
+		var timestamps = detail.timestamp;
+		
+		var xAxis = new Array();
+		var yAxis = new Array();
+		for (var j = 0; j < timestamps.length; j++){
+			xAxis[j] = timestamps[j][0];
+			yAxis[j] = timestamps[j][1];
+		}
+		drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+	}
 }
 
 function drawDiscReadGraph() {
-
+	
 }
 
 function drawDiscWriteGraph() {
@@ -73,13 +107,16 @@ function renderTenentList(data) {
 	}
 }
 
-function renderTenentDetailTable() {
+function renderTenentDetailTable(dataStr) {
 	var table = document.getElementById('table_tenent_detail');
-	for (var i = 1; i < 4; i++) {
+	
+	var data = JSON.parse(dataStr);
+	
+	for (var i = 0; i < data.length; i++) {
 		var tr = document.createElement('tr');
 
 		var td_image_id = document.createElement('td');
-		td_image_id.appendChild(document.createTextNode("image" + i));
+		td_image_id.appendChild(document.createTextNode(data[i].vm_id));
 
 		var td_cpu = document.createElement('td');
 		var div_cpu = document.createElement('div');
@@ -126,8 +163,12 @@ function renderTenentDetailTable() {
 		tr.appendChild(td_netwrok_out);
 
 		table.appendChild(tr);
-
 	}
+	
+	//draw graphs
+	drawCpuGraph(data);
+	drawMemeoryGraph(data);
+	
 }
 
 function drawGraphs() {
@@ -149,16 +190,12 @@ function registerEventHandler(){
 	timeframeConfirmBtn.addEventListener('click', eh_timeframe_button_confirm, false);
 }
 
-function doSimpleAlert(data){
-	alert(data);
-}
-
 var eh_timeframe_button_confirm = function(event){
 	Ajax("get/", renderTenentList);
 };
 
 var eh_selection_change = function(event) {
-	Ajax(event.target.value+"/", doSimpleAlert);
+	Ajax(event.target.value+"/", renderTenentDetailTable);
 };
 
 var Ajax = function(url, callback) {
@@ -177,3 +214,4 @@ var Ajax = function(url, callback) {
 	xmlhttp.open("get", url, false);
 	xmlhttp.send(null);
 };
+
