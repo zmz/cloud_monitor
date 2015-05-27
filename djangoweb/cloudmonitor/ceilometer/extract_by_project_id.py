@@ -43,13 +43,13 @@ def extract(time_begin, time_end, project_id):
               #"counter_unit": 1,
               "counter_volume": 1,
              }
-    #sort={"counter_name":1}
+
     import time
     t1 = time.time()
-    cur = meter.find(query, fields)
+    cur = meter.find(query, fields).sort("timestamp")
     result = {}
     t2 = time.time()
-    print str(t2-t1)
+    #print str(t2-t1)
     for c in cur:
         if c["counter_name"] == "cpu_util":
             vm_id = c["resource_id"]
@@ -136,10 +136,10 @@ def extract(time_begin, time_end, project_id):
                 result[vm_id] = {"network.outgoing.bytes.rate": {"taps": {tap_name: [(c["timestamp"].strftime('%Y-%m-%d %H:%M:%S'),c["counter_volume"])]},
                                                                  "counter_unit": "B/s"}}
     t3 = time.time()
-    print str(t3-t2)
+    #print str(t3-t2)
     return  result
 
 project_id = "7b0a13d5d0d64a2998dc530acfbf2f08"
 result = extract(cfg.TIME_BEGIN, cfg.TIME_END, project_id)
 import json
-#print json.dumps(result)
+print json.dumps(result)
