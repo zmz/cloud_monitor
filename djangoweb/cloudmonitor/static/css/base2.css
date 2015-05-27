@@ -3,6 +3,11 @@ body {
 	overflow-x:scroll;
 }
 
+div#div_tenent_selection{
+	padding:10px 0px;
+}
+
+
 table, th, td {
 	border: 1px solid blue;
 }

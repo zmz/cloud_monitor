@@ -76,6 +76,8 @@ function renderTenentList(tenents) {
 		opt.text = tenents[i];
 		sel.add(opt);
 	}
+	
+	sel.addEventListener('change', eh_selection_change, false);
 }
 
 function renderTenentDetailTable() {
@@ -145,5 +147,9 @@ function drawGraphs(){
 		drawCpuGraph(document.getElementById(i+'network_in'),i,null);
 		drawCpuGraph(document.getElementById(i+'network_out'),i,null);
 	}
+}
+
+var eh_selection_change = function(event){
+	alert(event.target.value)
 }
 

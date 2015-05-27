@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Lenovo Cloud Monitor</title>
+    {% load staticfiles %}
+
+    <script src="{% static 'js/eCharts/echarts-all.js' %}"></script>
+    <script src="{% static 'js/content_render2.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery-2.1.3.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery.easyui.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base2.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/easyui/themes/default/easyui.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/easyui/themes/icon.css' %}" type="text/css" />
+
+</head>
+<body>
+	
+<div id="div_time_frame">
+	TimeStart: <input name="timestart" class="easyui-datetimespinner" style="width:180px">
+    TimeEnd:   <input name="timeend" class="easyui-datetimespinner"  style="width:180px">
+    <button type="button" name="btn_time_frame_confirm"> Go </button>
+</div>
+	
+	
+<div id="div_tenent_selection">
+	Tenents List: 
+	<select id="sel_tenent_selection">
+		<option value="112"> 112</option>
+		<option value="119"> 119</option>
+	</select>
+</div>
+
+
+<div id="tenent_detail_list">
+	<table id="table_tenent_detail">
+		<tr>
+			<th>VM ID</th>
+			<th>CPU</th>
+			<th>Memory</th>
+			<th>Disk Read</th>
+			<th>Disk Write</th>
+			<th>Network In</th>
+			<th>Network Out</th>
+		</tr>
+	</table>
+
+</div>
+
+
+<script>
+		
+	// renderTenentList({{ tenents | safe }});
+	
+	registerEventHandler();
+	
+	renderTenentDetailTable();
+	
+	drawGraphs();
+	
+</script>
+
+<footer> copyright</footer>
+
+</body>
+</html>
