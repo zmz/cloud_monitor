@@ -43,60 +43,149 @@ function drawGraph(graphHolder, seriesLabels, xAxis, yAxis, unit) {
 }
 
 function drawCpuGraph(data) {
-	
-	for(var i = 0; i < data.length; i++) {
-		var graphHolder = document.getElementById(i+"cpu");
-		
+
+	for (var i = 0; i < data.length; i++) {
+
 		var detail = data[i].detail.cpu_util;
-		var unit = detail.counter_unit;
-		var timestamps = detail.timestamp;
-		
-		var xAxis = new Array();
-		var yAxis = new Array();
-		for (var j = 0; j < timestamps.length; j++){
-			xAxis[j] = timestamps[j][0];
-			yAxis[j] = timestamps[j][1];
+		if (detail) {
+			var graphHolder = document.getElementById(i + "cpu");
+
+			var unit = detail.counter_unit;
+			var timestamps = detail.timestamp;
+
+			var xAxis = new Array();
+			var yAxis = new Array();
+			for (var j = 0; j < timestamps.length; j++) {
+				xAxis[j] = timestamps[j][0];
+				yAxis[j] = timestamps[j][1];
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
 		}
-		drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
 	}
 }
 
 function drawMemeoryGraph(data) {
-	for(var i = 0; i < data.length; i++) {
-		var graphHolder = document.getElementById(i+"mem");
-		
-		var detail = data[i].detail.memory_usage;
-		var unit = detail.counter_unit;
-		var timestamps = detail.timestamp;
-		
-		var xAxis = new Array();
-		var yAxis = new Array();
-		for (var j = 0; j < timestamps.length; j++){
-			xAxis[j] = timestamps[j][0];
-			yAxis[j] = timestamps[j][1];
+	for (var i = 0; i < data.length; i++) {
+		var detail = data[i].detail.memory;
+		if (detail) {
+			var graphHolder = document.getElementById(i + "mem");
+			var unit = detail.counter_unit;
+			var timestamps = detail.timestamp;
+
+			var xAxis = new Array();
+			var yAxis = new Array();
+			for (var j = 0; j < timestamps.length; j++) {
+				xAxis[j] = timestamps[j][0];
+				yAxis[j] = timestamps[j][1];
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
 		}
-		drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+
 	}
 }
 
-function drawDiscReadGraph() {
-	
+function drawDiscReadGraph(data) {
+	for (var i = 0; i < data.length; i++) {
+		var detail = data[i].detail.volume_read;
+		if (detail) {
+			var graphHolder = document.getElementById(i + "disk_read");
+			var unit = detail.counter_unit;
+
+			var volumes = new Array();
+			for (var j = 0; j < detail.volumes.length; j++) {
+				var volume = detail.volumes[j];
+				var volume_id = volume[0];
+				var timeSeries = volume[1];
+
+				var xAxis = new Array();
+				var yAxis = new Array();
+				for (var k = 0; k < timeSeries.length; k++) {
+					xAxis[k] = timeSeries[k][0];
+					yAxis[k] = timeSeries[k][1];
+				}
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+		}
+	}
 }
 
-function drawDiscWriteGraph() {
+function drawDiscWriteGraph(data) {
+	for (var i = 0; i < data.length; i++) {
+		var detail = data[i].detail.volume_write;
+		if (detail) {
+			var graphHolder = document.getElementById(i + "disk_write");
+			var unit = detail.counter_unit;
 
+			var volumes = new Array();
+			for (var j = 0; j < detail.volumes.length; j++) {
+				var volume = detail.volumes[j];
+				var volume_id = volume[0];
+				var timeSeries = volume[1];
+
+				var xAxis = new Array();
+				var yAxis = new Array();
+				for (var k = 0; k < timeSeries.length; k++) {
+					xAxis[k] = timeSeries[k][0];
+					yAxis[k] = timeSeries[k][1];
+				}
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+		}
+	}
 }
 
-function drawNetworkReadGraph() {
+function drawNetworkInGraph(data) {
+	for (var i = 0; i < data.length; i++) {
+		var detail = data[i].detail.network_in;
+		if (detail) {
+			var graphHolder = document.getElementById(i + "network_in");
+			var unit = detail.counter_unit;
 
+			var taps = new Array();
+			for (var j = 0; j < detail.taps.length; j++) {
+				var tap = detail.taps[j];
+				var tap_id = tap[0];
+				var timeSeries = tap[1];
+
+				var xAxis = new Array();
+				var yAxis = new Array();
+				for (var k = 0; k < timeSeries.length; k++) {
+					xAxis[k] = timeSeries[k][0];
+					yAxis[k] = timeSeries[k][1];
+				}
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+		}
+	}
 }
 
-function drawNetworkWriteGraph() {
+function drawNetworkOutGraph(data) {
+	for (var i = 0; i < data.length; i++) {
+		var detail = data[i].detail.network_out;
+		if (detail) {
+			var graphHolder = document.getElementById(i + "network_out");
+			var unit = detail.counter_unit;
 
+			var taps = new Array();
+			for (var j = 0; j < detail.taps.length; j++) {
+				var tap = detail.taps[j];
+				var tap_id = tap[0];
+				var timeSeries = tap[1];
+
+				var xAxis = new Array();
+				var yAxis = new Array();
+				for (var k = 0; k < timeSeries.length; k++) {
+					xAxis[k] = timeSeries[k][0];
+					yAxis[k] = timeSeries[k][1];
+				}
+			}
+			drawGraph(graphHolder, ["abc"], xAxis, yAxis, unit);
+		}
+	}
 }
 
 function renderTenentList(data) {
-	var sel = document.getElementById("sel_tenent_selection");	
+	var sel = document.getElementById("sel_tenent_selection");
 	var json = JSON.parse(data);
 	var tenents = json.tenents;
 	for (var i = 0; i < tenents.length; i++) {
@@ -107,11 +196,59 @@ function renderTenentList(data) {
 	}
 }
 
+function render_tenents(tenents) {
+	var div_summary = document.getElementById("summary");
+
+	div_summary.appendChild(document.createTextNode("Current Tenents: " + tenents.length));
+	div_summary.appendChild(document.createElement("br"));
+	div_summary.appendChild(document.createTextNode("High Consumpation: " + 3));
+	div_summary.appendChild(document.createElement("br"));
+	div_summary.appendChild(document.createTextNode("Normal Consumpation: " + 10));
+
+	var table = document.getElementById('table_tenent_detail');
+
+	// var data = JSON.parse(dataStr);
+
+	for (var i = 0; i < tenents.length; i++) {
+		var tr = document.createElement('tr');
+
+		// var td_image_id = document.createElement('td');
+		// td_image_id.appendChild(document.createTextNode(data[i].vm_id));
+
+		for (var j = 0; j < 5; j++) {
+			var td = document.createElement('td');
+			var div = document.createElement('div');
+
+			var link = document.createElement("a");
+			link.setAttribute("href", "/cloudmonitor/dashboard/tenents/" + tenents[i + j]);
+			link.appendChild(document.createTextNode(tenents[i + j]));
+			div.appendChild(link);
+			div.setAttribute('id', tenents[i + j]);
+
+			var num = Math.floor(Math.random() * 10 + 1);
+			if (num % 2 == 0) {
+				div.setAttribute('class', 'level_high');
+			} else if (num % 5 == 0) {
+				div.setAttribute('class', 'level_warn');
+			} else {
+				div.setAttribute('class', 'level_normal');
+			}
+
+			// div.addEventListener('click', eh_tenent_selection, false);
+
+			td.appendChild(div);
+			tr.appendChild(td);
+		}
+		i += 5;
+		table.appendChild(tr);
+	}
+}
+
 function renderTenentDetailTable(dataStr) {
 	var table = document.getElementById('table_tenent_detail');
-	
+
 	var data = JSON.parse(dataStr);
-	
+
 	for (var i = 0; i < data.length; i++) {
 		var tr = document.createElement('tr');
 
@@ -164,11 +301,15 @@ function renderTenentDetailTable(dataStr) {
 
 		table.appendChild(tr);
 	}
-	
+
 	//draw graphs
 	drawCpuGraph(data);
 	drawMemeoryGraph(data);
-	
+	drawDiscReadGraph(data);
+	drawDiscWriteGraph(data);
+	drawNetworkInGraph(data);
+	drawNetworkOutGraph(data);
+
 }
 
 function drawGraphs() {
@@ -182,20 +323,20 @@ function drawGraphs() {
 	}
 }
 
-function registerEventHandler(){
+function registerEventHandler() {
 	var tenentSelection = document.getElementById("sel_tenent_selection");
-	tenentSelection.addEventListener('change', eh_selection_change, false);
-	
+	tenentSelection.addEventListener('change', eh_tenent_selection, false);
+
 	var timeframeConfirmBtn = document.getElementsByName("btn_time_frame_confirm")[0];
 	timeframeConfirmBtn.addEventListener('click', eh_timeframe_button_confirm, false);
 }
 
-var eh_timeframe_button_confirm = function(event){
+var eh_timeframe_button_confirm = function(event) {
 	Ajax("get/", renderTenentList);
 };
 
-var eh_selection_change = function(event) {
-	Ajax(event.target.value+"/", renderTenentDetailTable);
+var eh_tenent_selection = function(event) {
+	Ajax(event.target.value + "/", renderTenentDetailTable);
 };
 
 var Ajax = function(url, callback) {

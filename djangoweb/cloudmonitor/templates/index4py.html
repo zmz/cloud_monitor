@@ -50,7 +50,8 @@
 
 <script>
 	
-	registerEventHandler();
+	// var dataString = "\"" + {{ tenent_detail |safe|stringformat:"s"}} + "\"";
+	renderTenentDetailTable("{{ tenent_detail |escapejs}}");
 	
 </script>
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Lenovo Cloud Monitor</title>
+    {% load staticfiles %}
+    <script src="{% static 'js/content_render2.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/tenents_list.css' %}" type="text/css" />
+
+</head>
+<body>
+	
+<div id="summary">
+</div>
+
+<div id="tenent_detail_list">
+	<table id="table_tenent_detail">
+	</table>
+</div>
+
+
+<script>
+	
+	var tenents = ["test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68","test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68", "test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68","test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68"];
+	
+	render_tenents(tenents);
+	
+</script>
+
+<footer> copyright</footer>
+
+</body>
+</html>

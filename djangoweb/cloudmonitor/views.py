@@ -15,7 +15,7 @@ import pdb
 
 # Create your views here.
 
-fileName = '/home/zhangxg/work/temp/tenents_sample.json'
+fileName = '/home/zhangxg/work/temp/tenents_sample2.json'
 
 data = json.load(open(fileName, 'r'))
 
@@ -42,12 +42,12 @@ def get_tenent_detail(request, tenent_name):
             'detail': data.get(key)
         }
         data_array.append(vm)
-    return HttpResponse(json.dumps(data_array), **response_kwargs)
-
+    context = RequestContext(request, {'tenent_detail': json.dumps(data_array)})
+    return render(request, 'index4py.html', context)
 
 
 def load_dash_board(request):
-    return render(request, 'index4py.html')
+    return render(request, 'tenents_list.html')
 
 
 def search(request):
