@@ -1,5 +1,3 @@
-
-
 from utils import json_request
 
 try:
@@ -47,8 +45,8 @@ class Authentication():
     """
     def get_all_projects(self,uri="/tenants",token=None):
         user_access_str = self.get_user_access()
-        keystone_endpoint_admin_url = self.get_service_accss_url_by_name(user_access_str,"keystone")
-        url = keystone_endpoint_admin_url + uri
+        keystone_endpoint_public_url = self.get_service_accss_url_by_name(user_access_str,"keystone")
+        url = keystone_endpoint_public_url + uri
         req_body = {}
         req_headers =  {'User-Agent': 'python-%s'%(self.user_agent,)}
         if None == token:
@@ -72,8 +70,8 @@ class Authentication():
             if service["name"].strip() == service_name.strip():
                 service_endpoints = service["endpoints"]
                 for endpoint in service_endpoints:
-                    if endpoint.has_key("adminURL"):
-                        keystone_endpoint_admin_url = endpoint["adminURL"]
+                    if endpoint.has_key("publicURL"):
+                        keystone_endpoint_admin_url = endpoint["publicURL"]
         return keystone_endpoint_admin_url
 
 
