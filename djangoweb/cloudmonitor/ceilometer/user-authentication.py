@@ -55,7 +55,6 @@ class Authentication():
             req_token = token
         req_headers["X-Auth-Token"] = req_token
         result = json_request(url,'GET',req_body , req_headers)
-        print result
         if type(result) == type(True):
             if result == False:
                 raise Exception("response error .")
@@ -82,8 +81,25 @@ class Authentication():
     curl -i 'http://controller:8774/v2/f59ae452a69544be9ccc886f0fe5e4d4/servers?all_tenants=True' -X GET
     -H "X-Auth-Project-Id: admin" -H "User-Agent: python-novaclient" -H "Accept: application/json" -H "X-Auth-Token:"
     """
-    def get_all_vms(self,project_id,is_all_tenants=False):
-        pass
+    def get_all_vms(self,uri="/servers",is_all_tenants=False):
+        user_access_str = self.get_user_access()
+        project_name = user_access_str["token"]["tenant"]["name"]
+        nova_endpoint_public_url = self.get_service_accss_url_by_name(user_access_str,"nova")
+        url = nova_endpoint_public_url + uri
+        self.set_service_clint_agent("novaclient")
+        if is_all_tenants == True:
+            url = url + "?" + "all_tenants=True"
+        req_body = {}
+        req_headers =  {'Accept': 'application/json','User-Agent': 'python-%s'%(self.user_agent,)}
+        req_headers["X-Auth-Project-Id"] = project_name
+        req_headers["X-Auth-Token"] = user_access_str["token"]["id"]
+        result = json_request(url,"GET",req_body,req_headers)
+        if type(result) == type(True):
+            if result == False:
+                raise Exception("response error .")
+        if not result.has_key("servers"):
+            raise Exception("get project error")
+        return result["servers"]
 
 
 if __name__ == "__main__":
@@ -96,4 +112,4 @@ if __name__ == "__main__":
     port = "35357"
     authObject = Authentication(controller_ip,username,password,project_name=None,port=port)
     authObject.set_service_clint_agent("keystoneclient")
-    print authObject.get_all_projects()
+    print authObject.get_all_vms()
