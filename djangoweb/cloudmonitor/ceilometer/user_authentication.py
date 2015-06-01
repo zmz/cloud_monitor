@@ -112,4 +112,4 @@ if __name__ == "__main__":
     port = "35357"
     authObject = Authentication(controller_ip,username,password,project_name=None,port=port)
     authObject.set_service_clint_agent("keystoneclient")
-    print authObject.get_all_vms()
+    print json.dumps(authObject.get_all_projects(), indent=2)

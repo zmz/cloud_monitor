@@ -196,42 +196,41 @@ function renderTenentList(data) {
 	}
 }
 
-function render_tenents(tenents) {
+function render_tenents(data) {
+
+    var tenents = JSON.parse(data);
+
 	var div_summary = document.getElementById("summary");
 
 	div_summary.appendChild(document.createTextNode("Current Tenents: " + tenents.length));
-	div_summary.appendChild(document.createElement("br"));
-	div_summary.appendChild(document.createTextNode("High Consumpation: " + 3));
-	div_summary.appendChild(document.createElement("br"));
-	div_summary.appendChild(document.createTextNode("Normal Consumpation: " + 10));
+	// div_summary.appendChild(document.createElement("br"));
+	// div_summary.appendChild(document.createTextNode("High Consumpation: " + 3));
+	// div_summary.appendChild(document.createElement("br"));
+	// div_summary.appendChild(document.createTextNode("Normal Consumpation: " + 10));
 
 	var table = document.getElementById('table_tenent_detail');
 
-	// var data = JSON.parse(dataStr);
-
-	for (var i = 0; i < tenents.length; i++) {
+	for (var i = 0; i < tenents.length;) {
 		var tr = document.createElement('tr');
 
 		// var td_image_id = document.createElement('td');
 		// td_image_id.appendChild(document.createTextNode(data[i].vm_id));
 
-		for (var j = 0; j < 5; j++) {
+		for (var j = 0; j < 5 && (i+j)<tenents.length; j++) {
 			var td = document.createElement('td');
 			var div = document.createElement('div');
 
 			var link = document.createElement("a");
-			link.setAttribute("href", "/cloudmonitor/dashboard/tenents/" + tenents[i + j]);
-			link.appendChild(document.createTextNode(tenents[i + j]));
+			link.setAttribute("href", "/cloudmonitor/dashboard/tenents/" + tenents[i + j].id);
+			link.appendChild(document.createTextNode(tenents[i + j].name));
 			div.appendChild(link);
-			div.setAttribute('id', tenents[i + j]);
+			div.setAttribute('id', tenents[i + j].id);
 
-			var num = Math.floor(Math.random() * 10 + 1);
-			if (num % 2 == 0) {
-				div.setAttribute('class', 'level_high');
-			} else if (num % 5 == 0) {
-				div.setAttribute('class', 'level_warn');
+			// var num = Math.floor(Math.random() * 10 + 1);
+			if (tenents[i+j].enabled == "true") {
+				div.setAttribute('class', 'enabled');
 			} else {
-				div.setAttribute('class', 'level_normal');
+				div.setAttribute('class', 'not_enabled');
 			}
 
 			// div.addEventListener('click', eh_tenent_selection, false);

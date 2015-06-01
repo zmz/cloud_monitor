@@ -21,9 +21,7 @@
 
 <script>
 	
-	var tenents = ["test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68","test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68", "test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68","test1", "8f633247-efdb-409a-8186-92b582c1ca68", "test2","8f633247-efdb-409a-8186-92b582c1ca68"];
-	
-	render_tenents(tenents);
+	render_tenents("{{tenents | escapejs}}");
 	
 </script>
 

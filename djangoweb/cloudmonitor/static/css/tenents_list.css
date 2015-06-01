@@ -18,14 +18,10 @@ table div {
     width:200px;
 }
 
-div.level_high {
-	background-color:#FF5511;
-}
-
-div.level_warn {
+div.not_enabled {
 	background-color:#BBBB00;
 }
 
-div.level_normal {
+div.enabled {
 	background-color:#668800;
 }

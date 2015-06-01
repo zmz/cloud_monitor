@@ -6,18 +6,22 @@ from django.http import HttpResponse
 
 from . import dataprocessor
 
-from ceilometer import extract
+from ceilometer import extract, extract_by_project_id
+
+from ceilometer.user_authentication import Authentication
 
 import time,json
+
+from datetime import datetime, timedelta
 
 import pdb
 
 
 # Create your views here.
-
-fileName = '/home/zhangxg/work/temp/tenents_sample2.json'
-
-data = json.load(open(fileName, 'r'))
+#
+# fileName = '/home/zhangxg/work/temp/tenents_sample2.json'
+#
+# data = json.load(open(fileName, 'r'))
 
 response_kwargs = {'content_type': 'application/json'}
 
@@ -25,16 +29,34 @@ page_data = {};
 
 
 def get_tenents(request):
-    tenents = ['665385cb8b17478fa20946fcebcfa832', '665385cb8b17478fa20946fcebcfa832', '12345678', 'abcd']
-    context = {'tenents': tenents}
+
+    # controller_ip = "192.168.232.129"
+    controller_ip = "10.120.16.100"
+    username = "admin"
+    # password = "cloud1234"
+    password = "admin123"
+    project_name = None
+    port = "35357"
+    authObject = Authentication(controller_ip,username,password,project_name=None,port=port)
+    authObject.set_service_clint_agent("keystoneclient")
+    context = {'tenents': json.dumps(authObject.get_all_projects())}
     return HttpResponse(json.dumps(context), **response_kwargs)
     # return render(request, 'index4py.html', context)
 
-def get_tenent_detail(request, tenent_name):
-    # context = {'data':data}
+def get_tenent_detail(request, tenent_name, time_off_set=-1):
     data_array = []
 
-    # pdb.set_trace()
+    now = datetime.now()
+    delta = timedelta(days=time_off_set)
+
+    if time_off_set > 0:
+        time_begin = now
+        time_end = now + delta
+    else:
+        time_begin = now + delta
+        time_end = now
+
+    data = extract_by_project_id.extract(time_begin.__format__('%Y-%m-%d %H:%M'), time_end.__format__('%Y-%m-%d %H:%M'), tenent_name)
 
     for key in data.keys():
         vm = {
@@ -47,7 +69,14 @@ def get_tenent_detail(request, tenent_name):
 
 
 def load_dash_board(request):
-    return render(request, 'tenents_list.html')
+    controller_ip = "10.120.16.100"
+    username = "admin"
+    password = "admin123"
+    port = "35357"
+    authObject = Authentication(controller_ip,username,password,project_name=None,port=port)
+    authObject.set_service_clint_agent("keystoneclient")
+    context = {'tenents': json.dumps(authObject.get_all_projects())}
+    return render(request, 'tenents_list.html', context)
 
 
 def search(request):
@@ -105,3 +134,7 @@ def show_detail(request, resource_id, **paras):
                               'resource_list': resources, 'resource_id': resource_id, 'timestart': form_paras['timestart'],
                               'timeend': form_paras['timeend']})
     return render(request, 'index.html', context)
+
+
+
+
