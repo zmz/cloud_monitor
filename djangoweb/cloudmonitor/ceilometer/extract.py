@@ -22,6 +22,7 @@ if not db.authenticate(cfg.MONGO_DB_USER,cfg.MOMGO_DB_PASSWORD):
 meter = db['meter']
 
 volumes = query_volumes(cfg.MANAGE_IP, cfg.USERNAME, cfg.PASSWORD)
+
 vms = query_vm(cfg.MANAGE_IP, cfg.USERNAME, cfg.PASSWORD)
 vm_dict = {}
 for vm in vms:
