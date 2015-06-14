@@ -5,10 +5,20 @@ from httplib import HTTPConnection, HTTPException
 from urlparse import urlparse
 import json
 
-import api_config
+# import api_config
+
+config = {
+    'endpoint_ip': '10.120.16.100',
+    'endpoint_port': 5000,
+    # 'user_name': 'fopadmin',
+    # 'user_password': 'YG86R-jkE',
+    'user_name': 'admin',
+    'user_password': 'admin123',
+    'timeout': 30
+}
 
 
-url_root = 'http://' + api_config.config['endpoint_ip'] + ':' + str(api_config.config['endpoint_port'])
+url_root = 'http://' + config['endpoint_ip'] + ':' + str(config['endpoint_port'])
 
 base_header = {
     'Content-Type': 'application/json',
@@ -48,8 +58,8 @@ def request_token(tenant_name):
     print('request token...')
     global token, service_catalog
     url = url_root + '/v2.0/tokens'
-    body = {"auth": {"tenantName": tenant_name, "passwordCredentials": {"username": api_config.config['user_name'],
-                                                                        "password": api_config.config['user_password']}}}
+    body = {"auth": {"tenantName": tenant_name, "passwordCredentials": {"username": config['user_name'],
+                                                                        "password": config['user_password']}}}
     data = request('POST', url, body, base_header)
     if not data.get('access'):
         raise Exception('Error getting the token for tenant' + tenant_name)
@@ -72,6 +82,9 @@ def request_all_projects(tenant_name):
     # fixme: dictionary appending.
     if not token:
         request_token(tenant_name)
+
+    # url = service_catalog['keystone']['endpoints'][0]['adminURL']
+    # url += '/tenants'
 
     base_header['X-Auth-Token'] = token['token']['id']
 
@@ -108,28 +121,60 @@ def request_vms(tenant_name):
     return response
 
 
-print(json.dumps(request_vms('admin')))
+def show_tenants_and_vm_statistics(tenant_name):
+
+    all_tenants = request_all_projects(tenant_name)
+    all_vms = request_vms(tenant_name)
+
+    tenants_names = {}
+    for tenant in all_tenants:
+        tenants_names[tenant['id']] = tenant['name']
+
+    tenants_number = all_tenants.__len__()
+    vm_numbers = all_vms['servers'].__len__()
+    active_vms = []
+    for vm in all_vms['servers']:
+        if vm['status'] == 'ACTIVE':
+            active_vms.append(vm)
+
+    vm_by_environment = {
+        'dev': set(),
+        'tst': set(),
+        'prd': set(),
+        'oth': set()
+    }
+
+    no_tenants_associated = []
+    for vm in active_vms:
+        if not tenants_names.get(vm['tenant_id']):
+            no_tenants_associated.append(vm['tenant_id'])
+            continue
+
+        name = tenants_names[vm['tenant_id']]
+        if name.startswith('DEV_'):
+            vm_by_environment['dev'].add(vm['tenant_id'])
+        elif name.startswith('TST_'):
+            vm_by_environment['tst'].add(vm['tenant_id'])
+        elif name.startswith('PRD_'):
+            vm_by_environment['prd'].add(vm['tenant_id'])
+        else:
+            vm_by_environment['oth'].add(vm['tenant_id'])
+
+    print(" ---- Overall Statistics ----- ")
+    print('Tenants Total Number: ' + str(tenants_number))
+    print('VM Total Number: ' + str(vm_numbers) + ', ' + str(active_vms.__len__()) + '(Active)')
+
+    print('\n ---- Statistics by Environment ----- ')
+    for env_key in vm_by_environment.keys():
+        print(env_key + ': ' + str(vm_by_environment[env_key].__len__()))
+
+    print('\nBelow tenant has no association:')
+    for tenant in no_tenants_associated:
+        print(tenant)
 
 
-# fixme: how to define the class static
-# fixme: make the variable global scope, singleton
+show_tenants_and_vm_statistics('admin')
 
-# class Requester:
+# print(json.dumps(request_all_projects('admin')))
 #
-#     def request(self, method, url, body, header):
-#
-#         conn = connector.APIConnector()
-#         connection = conn.get_connection()
-#
-#         try:
-#             connection.request(method, url, json.dumps(body), header)
-#             response = connection.getresponse()
-#
-#             if response.status > 299:
-#                 return False
-#
-#             return response.read()
-#         except HTTPException:
-#             return False
-#         finally:
-#             connection.close()
+# print(json.dumps(request_vms('admin')))
