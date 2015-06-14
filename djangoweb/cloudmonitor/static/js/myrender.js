@@ -2,15 +2,6 @@
  * @author zhangxg
  */
 
-function render() {
-	// init page controls
-
-}
-
-// function path(url) {
-	// return /(.*\/)[^\/]*$/gi.exec(url)[1];
-// }
-
 function renderMenu(){
 	$("#menu").kendoMenu();
 }
@@ -39,12 +30,39 @@ function renderGrid(){
     });
 }
 
-function initCharts(theme) {
+function renderGridCpu(){
+	$("#cpu").kendoGrid({
+        dataSource: {
+            type: "odata",
+            transport: {
+                read: "http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders"
+            },
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            pageSize: 10
+        },
+        scrollable: false,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "OrderID", width: "70px" },
+            { field: "ShipCountry", title:"Ship Country", width: "20%" },
+            { field: "ShipAddress", title:"Ship Address" }
+        ]
+    });
+}
+
+function initCharts() {
+	
+	var theme = "blueopal";
+	
     $(".k-tabstrip .k-content .k-chart").empty().each(function() {
         $(this).removeClass(".k-chart").removeData();
     });
 
-    $("#sales-per-day").kendoChart({
+    $("#tenants_vm_trend").kendoChart({
         transitions: false,
         theme: theme,
         chartArea: {
@@ -109,7 +127,7 @@ function initCharts(theme) {
         }
     });
 
-    $("#sales-per-region").kendoChart({
+    $("#dis_by_env").kendoChart({
         transitions: false,
         theme: theme,
         legend: {
@@ -199,7 +217,7 @@ function initCharts(theme) {
         }
     });
 
-    $("#revenue").kendoChart({
+    $("#dis_by_bu").kendoChart({
         transitions: false,
         theme: theme,
         legend: {
@@ -292,167 +310,101 @@ function initCharts(theme) {
             template: "#= series.name # <br /> #= category #: $#= value #"
         }
     });
-
-    $("#market-alice-mutton").kendoChart({
-        transitions: false,
-        theme: theme,
-        title: {
-            text: "Alice Mutton",
-            position: "bottom",
-            padding: 4,
-            margin: 0
-        },
-        legend: {
-            visible: false
-        },
-        chartArea: {
-            margin: {
-                top: 15,
-                bottom: 0
-            },
-            background: "transparent"
-        },
-        seriesDefaults: {
-            type: "donut"
-        },
-        series: [{
-            name: "2011",
-            data: [{ category: "Canterbury", value: 30},
-                   { category: "Manchester", value: 45},
-                   { category: "Rochester", value: 25}],
-                    padding: 0
-        },{
-            name: "2012",
-            data: [{ category: "Canterbury", value: 64},
-                   { category: "Manchester", value: 12},
-                   { category: "Rochester", value: 24}]
-        }],
-        tooltip: {
-            visible: true,
-            template: "#= category # (#= series.name #): #= value #%"
-        }
-    });
-
-    $("#market-gravad-lax").kendoChart({
-        transitions: false,
-        theme: theme,
-        title: {
-            text: "Gravad lax",
-            position: "bottom",
-            padding: 4,
-            margin: 0
-        },
-        legend: {
-            visible: false
-        },
-        chartArea: {
-            margin: {
-                top: 15,
-                bottom: 0
-            },
-            background: "transparent"
-        },
-        seriesDefaults: {
-            type: "donut"
-        },
-        series: [{
-            name: "2011",
-            data: [{ category: "Canterbury", value: 22},
-                   { category: "Manchester", value: 18},
-                   { category: "Rochester", value: 60}],
-                    padding: 0
-        },{
-            name: "2012",
-            data: [{ category: "Canterbury", value: 35},
-                   { category: "Manchester", value: 20},
-                   { category: "Rochester", value: 45}]
-        }],
-        tooltip: {
-            visible: true,
-            template: "#= category # (#= series.name #): #= value #%"
-        }
-    });
-
-    $("#market-inlagd-sill").kendoChart({
-        transitions: false,
-        theme: theme,
-        title: {
-            text: "Inlagd Sill",
-            position: "bottom",
-            padding: 4,
-            margin: 0
-        },
-        legend: {
-            visible: false
-        },
-        chartArea: {
-            margin: {
-                top: 15,
-                bottom: 0
-            },
-            background: "transparent"
-        },
-        seriesDefaults: {
-            type: "donut"
-        },
-        series: [{
-            name: "2011",
-            data: [{ category: "Canterbury", value: 30},
-                   { category: "Manchester", value: 21},
-                   { category: "Rochester", value: 49}],
-                    padding: 0
-        },{
-            name: "2012",
-            data: [{ category: "Canterbury", value: 32},
-                   { category: "Manchester", value: 25},
-                   { category: "Rochester", value: 43}]
-        }],
-        tooltip: {
-            visible: true,
-            template: "#= category # (#= series.name #): #= value #%"
-        }
-    });
-
-    $("#market-spegesild").kendoChart({
-        transitions: false,
-        theme: theme,
-        title: {
-            text: "Spegesild",
-            position: "bottom",
-            padding: 4,
-            margin: 0
-        },
-        legend: {
-            visible: false
-        },
-        chartArea: {
-            margin: {
-                top: 15,
-                bottom: 0
-            },
-            background: "transparent"
-        },
-        seriesDefaults: {
-            type: "donut"
-        },
-        series: [{
-            name: "2011",
-            data: [{ category: "Canterbury", value: 37},
-                   { category: "Manchester", value: 42},
-                   { category: "Rochester", value: 21}],
-                    padding: 0
-        },{
-            name: "2012",
-            data: [{ category: "Canterbury", value: 32},
-                   { category: "Manchester", value: 30},
-                   { category: "Rochester", value: 38}]
-        }],
-        tooltip: {
-            visible: true,
-            template: "#= category # (#= series.name #): #= value #%"
-        }
-    });
 }
+
+
+function drawDistByEnvTenants() {
+	var holder = echarts.init(document.getElementById("market-spegesild"));
+
+	option = {
+		title : {
+			text : '某站点用户访问来源',
+			subtext : '纯属虚构',
+			x : 'center'
+		},
+		tooltip : {
+			trigger : 'item',
+			formatter : "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend : {
+			orient : 'vertical',
+			x : 'left',
+			data : ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+		},
+		calculable : true,
+		series : [{
+			name : '访问来源',
+			type : 'pie',
+			radius : '55%',
+			center : ['50%', '60%'],
+			data : [{
+				value : 335,
+				name : '直接访问'
+			}, {
+				value : 310,
+				name : '邮件营销'
+			}, {
+				value : 234,
+				name : '联盟广告'
+			}, {
+				value : 135,
+				name : '视频广告'
+			}, {
+				value : 1548,
+				name : '搜索引擎'
+			}]
+		}]
+	};
+
+	holder.setOption(option);
+}
+
+function drawDistByEnvVMs() {
+	var holder = echarts.init(document.getElementById("market-alice-mutton"));
+
+	option = {
+		title : {
+			text : '某站点用户访问来源',
+			subtext : '纯属虚构',
+			x : 'center'
+		},
+		tooltip : {
+			trigger : 'item',
+			formatter : "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend : {
+			orient : 'vertical',
+			x : 'left',
+			data : ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+		},
+		calculable : true,
+		series : [{
+			name : '访问来源',
+			type : 'pie',
+			radius : '55%',
+			center : ['50%', '60%'],
+			data : [{
+				value : 335,
+				name : '直接访问'
+			}, {
+				value : 310,
+				name : '邮件营销'
+			}, {
+				value : 234,
+				name : '联盟广告'
+			}, {
+				value : 135,
+				name : '视频广告'
+			}, {
+				value : 1548,
+				name : '搜索引擎'
+			}]
+		}]
+	};
+
+	holder.setOption(option);
+}
+
 
 
 function render_configure() {

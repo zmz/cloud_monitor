@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Kendo UI &hearts; Twitter Bootstrap: Responsive demo</title>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="../static/external/bootstrap/bootstrap.min.css" />
@@ -15,6 +16,9 @@
         <script src="../static/external/kendo/js/angular.min.js"></script>
         <script src="../static/external/kendo/js/kendo.all.min.js"></script>
         <script src="../static/external/kendo/js/kendo.timezones.min.js"></script>
+        
+        <script src="../static/external/eCharts/echarts-all.js"></script>
+        
         <script src="../static/js/theme-chooser.js"></script>
         <script src="../static/js/myrender.js"
 
@@ -23,13 +27,13 @@
         <script src="vendor/respond.min.js"></script>
         <![endif]-->
     </head>
+    
     <body>
         <header>
             <div class="container" class="row">
                 <h1 class="col-sm-3 hidden-sm">Lenov Cloud Monitor</h1>
-                <!-- <h1 class="col-sm-3 visible-sm">Kendo UI &hearts;<br/> Bootstrap</h1> -->
 
-                <button id="configure" class="visible-xs"><span class="glyphicon glyphicon-align-justify"></span></button>
+                <!-- <button id="configure" class="visible-xs"><span class="glyphicon glyphicon-align-justify"></span></button>
 
                 <div id="configurator-wrap" class="col-sm-9 hidden-xs">
                     <div id="configurator" class="row">
@@ -48,71 +52,77 @@
                             <select id="font-size"></select>
                         </label>
                     </div>
-                </div>
+                </div> -->
             </div>
         </header>
 
         <div id="example" class="container">
-            
-
             <ul id="menu">
-                <!-- <li><a href="#profile">Profile</a></li> -->
-                <!-- <li><a href="#schedule">Schedule</a></li> -->
-                <li><a href="#orders">Orders</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <!-- <li><a href="http://demos.telerik.com/kendo-ui">Kendo UI demos</a></li> -->
+                <li><a href="#orders">Tenants & VM</a></li>
+                <li><a href="#cpu">CPU</a></li>
+                <li><a href="#memory">Memory</a></li>
+                <li><a href="#disk_read">Disk Read</a></li>
+                <li><a href="#disk_write">Disk Write</a></li>
+                <li><a href="#network_in">Network In</a></li>
+                <li><a href="#network_out">Network Out</a></li>
             </ul>
 
             <div class="row clearfix">
-               
-
                 <div class="col-lg-12">
                     <div id="tabstrip" class="ra-section">
                         <ul>
-                            <li class="k-state-active"><span class="km-icon revenue"></span><span class="hidden-xs">Revenue</span></li>
-                            <li><span class="km-icon spd"></span><span class="hidden-xs">Sales / day</span></li>
-                            <li><span class="km-icon spr"></span><span class="hidden-xs">Sales / region</span></li>
-                        <li><span class="km-icon share"></span><span class="hidden-xs">Market share</span></li>
+                            <li class="k-state-active"><span class="km-icon spr"></span><span class="hidden-xs">Tenants-VM Trends</span></li>
+                            <li><span class="km-icon share"></span><span class="hidden-xs">Distribution By Environment</span></li>
+                            <li><span class="km-icon share"></span><span class="hidden-xs">Distribution By BU</span></li>
+                        	<li><span class="km-icon share"></span><span class="hidden-xs">Distribution By Geo</span></li>
                         </ul>
-                        <div><div id="revenue"></div></div>
-                        <div><div id="sales-per-day"></div></div>
-                        <div><div id="sales-per-region"></div></div>
-                        <div>
-                            <div id="market-alice-mutton" class="market-donut"></div>
-                            <div id="market-gravad-lax" class="market-donut"></div>
-                            <div id="market-inlagd-sill" class="market-donut"></div>
+                        <div><div id="tenants_vm_trend"></div></div>
+                        <div><div id="dis_by_env"></div>
+                        	<!-- <div id="dis_by_env_tenants"></div>
+                        	<div id="dis_by_env_vm"></div> -->
+                        </div>
+                        <div><div id="dis_by_bu"></div></div>
+                        <div><div id="dis_by_geo"></div>
+	                        <div id="market-alice-mutton" class="market-donut"></div>
+                            <!-- <div id="market-gravad-lax" class="market-donut"></div>
+                            <div id="market-inlagd-sill" class="market-donut"></div> -->
                             <div id="market-spegesild" class="market-donut"></div>
+                        
                         </div>
                     </div>
                 </div>
             </div>
-
-            
-
             <div id="orders" class="ra-section"></div>
-
+            <label class="description"> CPU Statistics</label>
+            <div id="cpu" class="ra-section"></div>
             
-
-            <footer>Copyright &copy; 2015 <a href="http://lenovo.com/">Lenovo</a>. All rights reserved.</footer>
+            <label class="description"> Memory Statistics</label>
+            <div id="memory" class="ra-section"></div>
+            
+            <label class="description"> Disk Statistics</label>
+            <div id="disk_read" class="ra-section"></div>
+            <div id="disk_write" class="ra-section"></div>
+            
+            <label class="description"> Network Statistics</label>
+            <div id="network_in" class="ra-section"></div>
+            <div id="network_out" class="ra-section"></div>
+            
+            <footer>Copyright &copy; 2015 <a href="http://www.lenovo.com/">Lenovo</a>. All rights reserved.</footer>
         </div>
 
         <script>
-
             function path(url) {
                 return /(.*\/)[^\/]*$/gi.exec(url)[1];
             }
-
-			render_configure();
-
+			// render_configure();
             renderMenu();
-
-			addTabstripEffect();
-            
-            initCharts("bootstrap");
-
+            window.kendoThemeChooser.changeTheme("blueopal", true);
+            initCharts();
+            drawDistByEnvTenants();
+            drawDistByEnvVMs()
+            addTabstripEffect();
             renderGrid();
-
+            renderGridCpu();
         </script>
     </body>
 </html>

@@ -252,7 +252,9 @@ header .k-dropdown-wrap.k-state-default .k-input {
 
 .market-donut {
     display: inline-block;
-    width: 170px;
+    padding: 20px;
+    width: 400px;
+    height: 300px;
 }
 
 #panelbar .k-content {
