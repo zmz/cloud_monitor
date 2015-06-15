@@ -390,7 +390,7 @@ function drawDistByEnvTenants() {
 }
 
 function drawPieChart(placeHolder, chartName, categories, datas){
-	var holder = echarts.init(document.getElementById(placeHolder), 'macarons');
+	var holder = echarts.init(document.getElementById(placeHolder));
 	option = {
 		title : {
 			text : chartName,
