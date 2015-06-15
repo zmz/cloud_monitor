@@ -93,6 +93,34 @@
                 </div>
             </div>
             <div id="orders" class="ra-section"></div>
+            
+            
+            <section class="well">
+                <h2 class="ra-well-title">CPU Statistics</h2>
+                <div class="form-horizontal form-widgets col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="birthday">Date Start</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="date" value="09/06/2015" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-horizontal form-widgets col-sm-6">
+                	<div class="form-group">
+                        <label class="control-label col-sm-4" for="birthday">Date End</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="date" value="10/06/2015" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                
+            </section>
+            
+            
+            
             <label class="description"> CPU Statistics</label>
             <div id="cpu" class="ra-section"></div>
             
@@ -116,6 +144,7 @@
             }
 			// render_configure();
             renderMenu();
+            renderWidget();
             window.kendoThemeChooser.changeTheme("blueopal", true);
             initCharts();
             drawDistByEnvTenants();

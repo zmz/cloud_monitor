@@ -15,6 +15,7 @@ import time,json
 from datetime import datetime, timedelta
 
 from integration.mysql import mysql_connector
+from integration.api import requester
 
 import pdb
 
@@ -27,8 +28,6 @@ import pdb
 
 response_kwargs = {'content_type': 'application/json'}
 
-page_data = {};
-
 
 def show_dashboard(request):
     return render(request, 'dashboard.html')
@@ -37,6 +36,12 @@ def show_dashboard(request):
 def get_cpu(request):
     cpu_performance = mysql_connector.get_cpu('2015-06-08', '2015-06-20')
     context = {'cpu': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_tenants_vm_dist_by_env(request):
+    dist = requester.request_tenants_and_vm_statistics('admin')
+    context = {'dist': dist}
     return HttpResponse(json.dumps(context), **response_kwargs)
 
 
@@ -149,4 +154,6 @@ def show_detail(request, resource_id, **paras):
 
 
 
-
+# dist = requester.request_tenants_and_vm_statistics('admin')
+# context = {'dist': dist}
+# print(json.dumps(context))

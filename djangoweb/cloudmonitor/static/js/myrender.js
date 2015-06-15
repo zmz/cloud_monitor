@@ -6,6 +6,12 @@ function renderMenu(){
 	$("#menu").kendoMenu();
 }
 
+function renderWidget(){
+	$("#example .form-widgets")
+        .find("input[type=date]").kendoDatePicker().end();
+}
+
+
 function renderGrid(){
 	$("#orders").kendoGrid({
         dataSource: {
@@ -31,9 +37,7 @@ function renderGrid(){
 }
 
 function renderGridCpu(){
-
 	var viewModel;
-
 	// Load Data
 	$.ajax({
 		async : false,
@@ -41,32 +45,6 @@ function renderGridCpu(){
 	}).success(function(result) {
 		viewModel = new kendo.observable(result);
 	});
-	
-	// $("#cpu").kendoGrid({
-        // dataSource: {
-            // type: "odata",
-            // transport: {
-                // read: "http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders"
-            // },
-            // serverPaging: true,
-            // serverSorting: true,
-            // serverFiltering: true,
-            // pageSize: 10
-        // },
-        // scrollable: false,
-        // sortable: true,
-        // groupable: true,
-        // pageable: { buttonCount: 4 },
-        // columns: [
-            // { field: "OrderID", width: "70px" },
-            // { field: "ShipCountry", title:"Ship Country", width: "20%" },
-            // { field: "ShipAddress", title:"Ship Address" }
-        // ]
-    // });
-	
-	
-	// alert(viewModel);
-
 	// Create Grid
 	$("#cpu").kendoGrid({
 		dataSource : {
@@ -94,7 +72,7 @@ function renderGridCpu(){
 
 function initCharts() {
 	
-	var theme = "blueopal";
+	var theme = "bootstrap";
 	
     $(".k-tabstrip .k-content .k-chart").empty().each(function() {
         $(this).removeClass(".k-chart").removeData();
@@ -165,7 +143,7 @@ function initCharts() {
         }
     });
 
-    $("#dis_by_env").kendoChart({
+    $("#dis_by_geo").kendoChart({
         transitions: false,
         theme: theme,
         legend: {
@@ -352,12 +330,70 @@ function initCharts() {
 
 
 function drawDistByEnvTenants() {
-	var holder = echarts.init(document.getElementById("market-spegesild"));
+	var data;
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/tenants_vm_env"
+	}).success(function(result) {
+		data = result;
+	});
+	
+	tenants_category = ['DEV', 'TST', 'PRD', 'OTH'];
+	vm_category = ['DEV', 'TST', 'PRD', 'OTH', 'NA'];
+	
+	tenants = data.dist.tenants;
+	vms = data.dist.vms;
 
+	tetants_values = [
+		{
+			name: 'DEV',
+			value: tenants['DEV'].length
+		},
+		{
+			name: 'TST',
+			value: tenants['TST'].length
+		},
+		{
+			name: 'PRD',
+			value: tenants['PRD'].length
+		},
+		{
+			name: 'OTH',
+			value: tenants['OTH'].length
+		}
+	];
+	vm_values = [
+		{
+			name: 'DEV',
+			value: vms['DEV'].length
+		},
+		{
+			name: 'TST',
+			value: vms['TST'].length
+		},
+		{
+			name: 'PRD',
+			value: vms['PRD'].length
+		},
+		{
+			name: 'OTH',
+			value: vms['OTH'].length
+		},
+		{
+			name: 'NA',
+			value: vms['NA'].length
+		}
+	];
+	
+	drawPieChart("dis_by_env_tetants", "Tenants", tenants_category, tetants_values);
+	drawPieChart("dis_by_env_vms", "VMs", vm_category, vm_values);
+}
+
+function drawPieChart(placeHolder, chartName, categories, datas){
+	var holder = echarts.init(document.getElementById(placeHolder));
 	option = {
 		title : {
-			text : '某站点用户访问来源',
-			subtext : '纯属虚构',
+			text : chartName,
 			x : 'center'
 		},
 		tooltip : {
@@ -367,191 +403,24 @@ function drawDistByEnvTenants() {
 		legend : {
 			orient : 'vertical',
 			x : 'left',
-			data : ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+			data : categories
 		},
 		calculable : true,
 		series : [{
-			name : '访问来源',
+			name : chartName,
 			type : 'pie',
 			radius : '55%',
 			center : ['50%', '60%'],
-			data : [{
-				value : 335,
-				name : '直接访问'
-			}, {
-				value : 310,
-				name : '邮件营销'
-			}, {
-				value : 234,
-				name : '联盟广告'
-			}, {
-				value : 135,
-				name : '视频广告'
-			}, {
-				value : 1548,
-				name : '搜索引擎'
-			}]
+			data : datas
 		}]
 	};
-
 	holder.setOption(option);
 }
 
-function drawDistByEnvVMs() {
-	var holder = echarts.init(document.getElementById("market-alice-mutton"));
-
-	option = {
-		title : {
-			text : '某站点用户访问来源',
-			subtext : '纯属虚构',
-			x : 'center'
-		},
-		tooltip : {
-			trigger : 'item',
-			formatter : "{a} <br/>{b} : {c} ({d}%)"
-		},
-		legend : {
-			orient : 'vertical',
-			x : 'left',
-			data : ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-		},
-		calculable : true,
-		series : [{
-			name : '访问来源',
-			type : 'pie',
-			radius : '55%',
-			center : ['50%', '60%'],
-			data : [{
-				value : 335,
-				name : '直接访问'
-			}, {
-				value : 310,
-				name : '邮件营销'
-			}, {
-				value : 234,
-				name : '联盟广告'
-			}, {
-				value : 135,
-				name : '视频广告'
-			}, {
-				value : 1548,
-				name : '搜索引擎'
-			}]
-		}]
-	};
-
-	holder.setOption(option);
-}
-
-
-
-function render_configure() {
-	$("#dimensions").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-		value : "common-bootstrap",
-		dataSource : [{
-			text : "Default",
-			value : "common"
-		}, {
-			text : "Bootstrap",
-			value : "common-bootstrap"
-		}],
-		change : function(e) {
-			window.kendoThemeChooser.changeCommon(this.value(), true);
-		}
-	});
-
-	$("#theme").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-		value : "bootstrap",
-		dataSource : [{
-			text : "Default",
-			value : "default"
-		}, {
-			text : "Blue Opal",
-			value : "blueopal"
-		}, {
-			text : "Bootstrap",
-			value : "bootstrap"
-		}, {
-			text : "Silver",
-			value : "silver"
-		}, {
-			text : "Uniform",
-			value : "uniform"
-		}, {
-			text : "Metro",
-			value : "metro"
-		}, {
-			text : "Black",
-			value : "black"
-		}, {
-			text : "Metro Black",
-			value : "metroblack"
-		}, {
-			text : "High Contrast",
-			value : "highcontrast"
-		}, {
-			text : "Moonlight",
-			value : "moonlight"
-		}, {
-			text : "Flat",
-			value : "flat"
-		}],
-		change : function(e) {
-			theme = this.value();
-			window.kendoThemeChooser.changeTheme(theme, true);
-			initCharts(theme);
-		}
-	});
-
-	$("#font-size").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-		value : 14,
-		height : 204,
-		dataSource : [{
-			text : "10px",
-			value : 10
-		}, {
-			text : "12px",
-			value : 12
-		}, {
-			text : "14px",
-			value : 14
-		}, {
-			text : "16px",
-			value : 16
-		}, {
-			text : "18px",
-			value : 18
-		}, {
-			text : "20px",
-			value : 20
-		}],
-		change : changeFontSize
-	});
-
-	$("#theme-list, #dimensions-list, #font-size-list").addClass("ra-list");
-
-	$("#configure").on("click", function(e) {
-		$("#configurator-wrap").toggleClass("hidden-xs");
-		e.preventDefault();
-	});
-}
-
-function changeFontSize(e) {
-	var value = $("#font-size").kendoDropDownList("value");
-
-	$("body").css("font-size", value + "px");
-}
-
+//========================= system =============
 function resizeTabStripContent() {
 	kendo.resize("#tabstrip");
 }
-
 
 function addTabstripEffect() {
 	$("#tabstrip").kendoTabStrip({
@@ -564,5 +433,4 @@ function addTabstripEffect() {
 	
 	$(window).resize(resizeTabStripContent);
 }
-
 

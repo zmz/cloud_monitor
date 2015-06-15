@@ -60,22 +60,42 @@
                         </ul>
                         <div><div id="tenants_vm_trend"></div></div>
                         <div><div id="dis_by_env"></div>
-                        	<!-- <div id="dis_by_env_tenants"></div>
-                        	<div id="dis_by_env_vm"></div> -->
+                        	<div id="dis_by_env_tetants" class="market-donut"></div>
+                            <div id="dis_by_env_vms" class="market-donut"></div>
                         </div>
                         <div><div id="dis_by_bu"></div></div>
                         <div><div id="dis_by_geo"></div>
-	                        <div id="market-alice-mutton" class="market-donut"></div>
-                            <!-- <div id="market-gravad-lax" class="market-donut"></div>
-                            <div id="market-inlagd-sill" class="market-donut"></div> -->
-                            <div id="market-spegesild" class="market-donut"></div>
-                        
                         </div>
                     </div>
                 </div>
             </div>
             <div id="orders" class="ra-section"></div>
-            <label class="description"> CPU Statistics</label>
+            <section class="well">
+                <h2 class="ra-well-title">Performance Statistics</h2>
+                <div class="form-horizontal form-widgets col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="birthday">Date Start</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="date" value="09/06/2015" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-horizontal form-widgets col-sm-6">
+                	<div class="form-group">
+                        <label class="control-label col-sm-4" for="birthday">Date End</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="date" value="10/06/2015" />
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="buttons-wrap">
+                    <button class="k-button k-state-default">Cancel</button>
+                    <button class="k-button k-state-default">Update</button>
+                </div>
+            </section>
+            <label class="description">CPU</label>
             <div id="cpu" class="ra-section"></div>
             
             <label class="description"> Memory Statistics</label>
@@ -98,12 +118,12 @@
             }
 			// render_configure();
             renderMenu();
-            window.kendoThemeChooser.changeTheme("blueopal", true);
+            renderWidget();
+            window.kendoThemeChooser.changeTheme("bootstrap", true);
             initCharts();
             drawDistByEnvTenants();
-            drawDistByEnvVMs()
             addTabstripEffect();
-            renderGrid();
+            // renderGrid();
             renderGridCpu();
         </script>
     </body>
