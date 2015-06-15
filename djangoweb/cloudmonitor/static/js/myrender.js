@@ -31,27 +31,65 @@ function renderGrid(){
 }
 
 function renderGridCpu(){
+
+	var viewModel;
+
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/cpu"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	
+	// $("#cpu").kendoGrid({
+        // dataSource: {
+            // type: "odata",
+            // transport: {
+                // read: "http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders"
+            // },
+            // serverPaging: true,
+            // serverSorting: true,
+            // serverFiltering: true,
+            // pageSize: 10
+        // },
+        // scrollable: false,
+        // sortable: true,
+        // groupable: true,
+        // pageable: { buttonCount: 4 },
+        // columns: [
+            // { field: "OrderID", width: "70px" },
+            // { field: "ShipCountry", title:"Ship Country", width: "20%" },
+            // { field: "ShipAddress", title:"Ship Address" }
+        // ]
+    // });
+	
+	
+	// alert(viewModel);
+
+	// Create Grid
 	$("#cpu").kendoGrid({
-        dataSource: {
-            type: "odata",
-            transport: {
-                read: "http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders"
-            },
-            serverPaging: true,
-            serverSorting: true,
-            serverFiltering: true,
-            pageSize: 10
-        },
-        scrollable: false,
+		dataSource : {
+			data : viewModel.cpu,
+			pageSize: 10
+		},
+		scrollable: true,
         sortable: true,
         groupable: true,
         pageable: { buttonCount: 4 },
         columns: [
-            { field: "OrderID", width: "70px" },
-            { field: "ShipCountry", title:"Ship Country", width: "20%" },
-            { field: "ShipAddress", title:"Ship Address" }
+            { field: "id", title: "ID", width: "70px", hidden: true},
+            { field: "tenant_id", title:"TenantID", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "vm_id", title:"VM ID", hidden: true },
+            { field: "timestamp", title:"Date" },
+            { field: "core", title:"Core Number" },
+            { field: "avg_core", title:"Average" },
+            { field: "max", title:"Max" },
+            { field: "count", title:"Count" },
+            { field: "name", title:"Name" }
         ]
-    });
+	}); 
 }
 
 function initCharts() {

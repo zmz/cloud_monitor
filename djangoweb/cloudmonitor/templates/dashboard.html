@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Kendo UI &hearts; Twitter Bootstrap: Responsive demo</title>
+        <title>Lenovo Private Cloud Dashboard</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        
+        {% load staticfiles %}
 
-		<link rel="stylesheet" href="../static/external/bootstrap/bootstrap.min.css" />
-		<link rel="stylesheet" href="../static/external/kendo/styles/kendo.common-bootstrap.min.css" />
-		<link rel="stylesheet" href="../static/external/kendo/styles/kendo.bootstrap.min.css" />
-        <link rel="stylesheet" href="../static/external/kendo/styles/kendo.dataviz.min.css" />
-        <link rel="stylesheet" href="../static/external/kendo/styles/kendo.dataviz.bootstrap.min.css" />
-        <link rel="stylesheet" href="../static/css/styles.css" />
+
+		<link rel="stylesheet" href="{% static 'external/bootstrap/bootstrap.min.css' %}" />
+		<link rel="stylesheet" href="{% static 'external/kendo/styles/kendo.common-bootstrap.min.css' %}" />
+		<link rel="stylesheet" href="{% static 'external/kendo/styles/kendo.bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'external/kendo/styles/kendo.dataviz.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'external/kendo/styles/kendo.dataviz.bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
         
-        <script src="../static/external/kendo/js/jquery.min.js"></script>
-        <script src="../static/external/kendo/js/angular.min.js"></script>
-        <script src="../static/external/kendo/js/kendo.all.min.js"></script>
-        <script src="../static/external/kendo/js/kendo.timezones.min.js"></script>
+        <script src="{% static 'external/kendo/js/jquery.min.js' %}"></script>
+        <script src="{% static 'external/kendo/js/angular.min.js' %}"></script>
+        <script src="{% static 'external/kendo/js/kendo.all.min.js' %}"></script>
+        <script src="{% static 'external/kendo/js/kendo.timezones.min.js' %}"></script>
         
-        <script src="../static/external/eCharts/echarts-all.js"></script>
+        <script src="{% static 'external/eCharts/echarts-all.js' %}"></script>
         
-        <script src="../static/js/theme-chooser.js"></script>
-        <script src="../static/js/myrender.js"
+        <script src="{% static 'js/theme-chooser.js' %}"></script>
+        <script src="{% static 'js/myrender.js' %}"></script>
 
         <!--[if lt IE 9]>
         <script src="vendor/html5shiv.js"></script>
@@ -32,27 +35,6 @@
         <header>
             <div class="container" class="row">
                 <h1 class="col-sm-3 hidden-sm">Lenov Cloud Monitor</h1>
-
-                <!-- <button id="configure" class="visible-xs"><span class="glyphicon glyphicon-align-justify"></span></button>
-
-                <div id="configurator-wrap" class="col-sm-9 hidden-xs">
-                    <div id="configurator" class="row">
-                        <label class="col-sm-4">
-                            <div class="description">Dimensions</div>
-                            <select id="dimensions"></select>
-                        </label>
-
-                        <label class="col-sm-4">
-                            <div class="description">Theme</div>
-                            <select id="theme"></select>
-                        </label>
-
-                        <label class="col-sm-4">
-                            <div class="description">Font-size</div>
-                            <select id="font-size"></select>
-                        </label>
-                    </div>
-                </div> -->
             </div>
         </header>
 

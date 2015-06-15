@@ -14,6 +14,8 @@ import time,json
 
 from datetime import datetime, timedelta
 
+from integration.mysql import mysql_connector
+
 import pdb
 
 
@@ -26,6 +28,16 @@ import pdb
 response_kwargs = {'content_type': 'application/json'}
 
 page_data = {};
+
+
+def show_dashboard(request):
+    return render(request, 'dashboard.html')
+
+
+def get_cpu(request):
+    cpu_performance = mysql_connector.get_cpu('2015-06-08', '2015-06-20')
+    context = {'cpu': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
 
 
 def get_tenents(request):
