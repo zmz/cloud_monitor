@@ -99,15 +99,19 @@
             <label class="description">CPU</label>
             <div id="cpu" class="ra-section"></div>
             
-            <label class="description"> Memory Statistics</label>
+            <label class="description"> Memory</label>
             <div id="memory" class="ra-section"></div>
             
-            <label class="description"> Disk Statistics</label>
+            <label class="description"> Disk Read</label>
             <div id="disk_read" class="ra-section"></div>
+            
+            <label class="description"> Disk Write</label>
             <div id="disk_write" class="ra-section"></div>
             
-            <label class="description"> Network Statistics</label>
+            <label class="description"> Network In</label>
             <div id="network_in" class="ra-section"></div>
+            
+            <label class="description"> Network Out</label>
             <div id="network_out" class="ra-section"></div>
             
             <footer>Copyright &copy; 2015 <a href="http://www.lenovo.com/">Lenovo</a>. All rights reserved.</footer>
@@ -121,11 +125,16 @@
             renderMenu();
             renderWidget();
             window.kendoThemeChooser.changeTheme("bootstrap", true);
-            initCharts();
-            drawDistByEnvTenants();
+            // initCharts();
+            // drawDistByEnvTenants();
             addTabstripEffect();
             // renderGrid();
             renderGridCpu();
+            renderGridMemory();
+            renderGridDiskRead();
+            renderGridDiskWrite();
+            renderGridNetworkIn();
+            renderGridNetworkOut();
         </script>
     </body>
 </html>

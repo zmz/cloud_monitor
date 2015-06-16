@@ -26,6 +26,10 @@ import pdb
 #
 # data = json.load(open(fileName, 'r'))
 
+
+date_start = '2015-06-08'
+date_end = '2015-06-20'
+
 response_kwargs = {'content_type': 'application/json'}
 
 
@@ -34,8 +38,38 @@ def show_dashboard(request):
 
 
 def get_cpu(request):
-    cpu_performance = mysql_connector.get_cpu('2015-06-08', '2015-06-20')
+    cpu_performance = mysql_connector.get_cpu(date_start, date_end)
     context = {'cpu': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_memory(request):
+    cpu_performance = mysql_connector.get_memory(date_start, date_end)
+    context = {'memory': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_disk_read(request):
+    cpu_performance = mysql_connector.get_disk_read(date_start, date_end)
+    context = {'disk_read': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_disk_write(request):
+    cpu_performance = mysql_connector.get_disk_write(date_start, date_end)
+    context = {'disk_write': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_network_in(request):
+    cpu_performance = mysql_connector.get_network_in(date_start, date_end)
+    context = {'network_in': cpu_performance}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
+def get_network_out(request):
+    cpu_performance = mysql_connector.get_network_out(date_start, date_end)
+    context = {'network_out': cpu_performance}
     return HttpResponse(json.dumps(context), **response_kwargs)
 
 

@@ -59,13 +59,192 @@ function renderGridCpu(){
             { field: "id", title: "ID", width: "70px", hidden: true},
             { field: "tenant_id", title:"TenantID", hidden: true },
             { field: "tenant_name", title:"Tenant Name" },
+            { field: "name", title:"Name" },
             { field: "vm_id", title:"VM ID", hidden: true },
             { field: "timestamp", title:"Date" },
             { field: "core", title:"Core Number" },
             { field: "avg_core", title:"Average" },
             { field: "max", title:"Max" },
-            { field: "count", title:"Count" },
-            { field: "name", title:"Name" }
+            { field: "count", title:"Count" }
+        ]
+	}); 
+}
+
+function renderGridMemory(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/memory"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	// Create Grid
+	$("#memory").kendoGrid({
+		dataSource : {
+			data : viewModel.memory,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "id", title: "ID", width: "70px", hidden: true},
+            { field: "tenant_id", title:"TenantID", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "name", title:"Name" },
+            { field: "vm_id", title:"VM ID", hidden: true },
+            { field: "timestamp", title:"Date" },
+            { field: "ram", title:"RAM" },
+            { field: "avg_mem", title:"Average" },
+            { field: "max", title:"Max" },
+            { field: "rate", title:"Rate" },
+            { field: "count", title:"Count" }
+        ]
+	}); 
+}
+
+function renderGridDiskRead(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/disk_read"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	// Create Grid
+	$("#disk_read").kendoGrid({
+		dataSource : {
+			data : viewModel.disk_read,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "id", hidden: true},
+            { field: "tenant_id", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "vm_id", hidden:true },
+            { field: "vm_name", title:"VM Name" },
+            { field: "resource_id", hidden:true },
+            { field: "display_name", title:"Disk Name" },
+            { field: "timestamp", title:"Date" },
+            { field: "count_unit", title:"Unit" },
+            { field: "avg_read", title:"Average" },
+            { field: "max_read", title:"Max" },
+            { field: "count", title:"Count" }
+        ]
+	}); 
+}
+
+function renderGridDiskWrite(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/disk_write"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	// Create Grid
+	$("#disk_write").kendoGrid({
+		dataSource : {
+			data : viewModel.disk_write,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "id", hidden: true},
+            { field: "tenant_id", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "vm_id", hidden:true },
+            { field: "vm_name", title:"VM Name" },
+            { field: "resource_id", hidden:true },
+            { field: "display_name", title:"Disk Name" },
+            { field: "timestamp", title:"Date" },
+            { field: "count_unit", title:"Unit" },
+            { field: "avg_write", title:"Average" },
+            { field: "max_write", title:"Max" },
+            { field: "count", title:"Count" }
+        ]
+	}); 
+}
+
+function renderGridNetworkIn(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/network_in"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	// Create Grid
+	$("#network_in").kendoGrid({
+		dataSource : {
+			data : viewModel.network_in,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "id", hidden: true},
+            { field: "tenant_id", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "vm_id", hidden:true },
+            { field: "vm_name", title:"VM Name" },
+            { field: "resource_id", hidden:true },
+            { field: "tap_name", title:"Tap Name" },
+            { field: "timestamp", title:"Date" },
+            { field: "count_unit", title:"Unit" },
+            { field: "avg_in", title:"Average" },
+            { field: "max_in", title:"Max" },
+            { field: "count", title:"Count" }
+        ]
+	}); 
+}
+
+function renderGridNetworkOut(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/network_out"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	// Create Grid
+	$("#network_out").kendoGrid({
+		dataSource : {
+			data : viewModel.network_out,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "id", hidden: true},
+            { field: "tenant_id", hidden: true },
+            { field: "tenant_name", title:"Tenant Name" },
+            { field: "vm_id", hidden:true },
+            { field: "vm_name", title:"VM Name" },
+            { field: "resource_id", hidden:true },
+            { field: "tap_name", title:"Tap Name" },
+            { field: "timestamp", title:"Date" },
+            { field: "count_unit", title:"Unit" },
+            { field: "avg_out", title:"Average" },
+            { field: "max_out", title:"Max" },
+            { field: "count", title:"Count" }
         ]
 	}); 
 }
@@ -388,6 +567,26 @@ function drawDistByEnvTenants() {
 	drawPieChart("dis_by_env_tetants", "Tenants", tenants_category, tetants_values);
 	drawPieChart("dis_by_env_vms", "VMs", vm_category, vm_values);
 }
+
+
+/*
+ * todo: make generic
+ */
+/*function renderGrid(placeHolder, columns){
+	var docId = "\"#" + placeHoder + "\"";
+	$(docId).kendoGrid({
+		dataSource : {
+			data : viewModel.cpu,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: columns
+	}); 
+}*/
+
 
 function drawPieChart(placeHolder, chartName, categories, datas){
 	var holder = echarts.init(document.getElementById(placeHolder));
