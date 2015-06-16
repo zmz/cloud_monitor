@@ -73,6 +73,12 @@ def get_network_out(request):
     return HttpResponse(json.dumps(context), **response_kwargs)
 
 
+def get_tenants_stats(request):
+    stats = mysql_connector.get_tenants_statistics('2015-06-16')
+    context = {'tenants_stats': stats}
+    return HttpResponse(json.dumps(context), **response_kwargs)
+
+
 def get_tenants_vm_dist_by_env(request):
     dist = requester.request_tenants_and_vm_statistics('admin')
     context = {'dist': dist}

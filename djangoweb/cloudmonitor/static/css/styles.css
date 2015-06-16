@@ -368,3 +368,7 @@ header .container h1.visible-sm {
     background-color: #212a33;
     color: #fff;
 }
+
+div#tenants_stats{
+	font-size: 10px;
+}

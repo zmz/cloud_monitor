@@ -36,6 +36,85 @@ function renderGrid(){
     });
 }
 
+
+function renderTenantsStats(){
+	var viewModel;
+	// Load Data
+	$.ajax({
+		async : false,
+		url : "/cloudmonitor/dashboard/tenants_stats"
+	}).success(function(result) {
+		viewModel = new kendo.observable(result);
+	});
+	
+	// Create Grid
+	$("#tenants_stats").kendoGrid({
+		dataSource : {
+			data : viewModel.tenants_stats,
+			pageSize: 10
+		},
+		scrollable: true,
+        sortable: true,
+        // groupable: true,
+        pageable: { buttonCount: 4 },
+        columns: [
+            { field: "tenant_id", hidden: true},
+            { field: "tenant_name", width: "140px", title:"Tenant Name" },
+            { title: "CPU (%)", 
+              columns: [
+              	{field: "cpu.core", title:"Core"},
+              	{field: "cpu.unit", title:"Unit", hidden: true},
+              	{field: "cpu.avg", title:"Average"},
+              	{field: "cpu.max", title:"Max"},
+              	{field: "cpu.vm_num", title:"VM Num"}
+              ]	
+            },
+            { title: "Memory (MB)", 
+              columns: [
+              	{field: "memory.ram", title:"RAM"},
+              	{field: "memory.unit", title:"Unit", hidden: true},
+              	{field: "memory.avg", title:"Average"},
+              	{field: "memory.max", title:"Max"},
+              	{field: "memory.vm_num", title:"VM Num", hidden: true}
+              ]	
+            },
+            { title: "Disk Read (B/s)", 
+              columns: [
+              	{field: "disk_read.unit", title:"Unit", hidden: true},
+              	{field: "disk_read.avg", title:"Average"},
+              	{field: "disk_read.max", title:"Max"},
+              	{field: "disk_read.vm_num", title:"VM Num", hidden: true}
+              ]	
+           },
+           { title: "Disk Write (B/s)", 
+              columns: [
+              	{field: "disk_write.unit", title:"Unit", hidden: true},
+              	{field: "disk_write.avg", title:"Average"},
+              	{field: "disk_write.max", title:"Max"},
+              	{field: "disk_write.vm_num", title:"VM Num", hidden: true}
+              ]	
+            },
+            { title: "Network In (B/s)", 
+              columns: [
+              	{field: "network_in.unit", title:"Unit", hidden: true},
+              	{field: "network_in.avg", title:"Average"},
+              	{field: "network_in.max", title:"Max"},
+              	{field: "network_in.vm_num", title:"VM Num", hidden: true}
+              ]	
+            },
+            { title: "Network Out (B/s)", 
+              columns: [
+              	{field: "network_out.unit", title:"Unit", hidden: true},
+              	{field: "network_out.avg", title:"Average"},
+              	{field: "network_out.max", title:"Max"},
+              	{field: "network_out.vm_num", title:"VM Num", hidden: true}
+              ]	
+            }
+        ]
+	}); 
+}
+
+
 function renderGridCpu(){
 	var viewModel;
 	// Load Data

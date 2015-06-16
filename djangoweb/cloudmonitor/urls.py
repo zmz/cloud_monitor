@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r"^dashboard/$", views.show_dashboard),
+    url(r"^dashboard/tenants_stats/$", views.get_tenants_stats),
     url(r"^dashboard/cpu/$", views.get_cpu),
     url(r"^dashboard/memory/$", views.get_memory),
     url(r"^dashboard/disk_read/$", views.get_disk_read),

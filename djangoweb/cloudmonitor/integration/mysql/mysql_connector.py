@@ -205,6 +205,194 @@ def get_network_out(date_start, date_end):
     return result
 
 
+def get_tenants_statistics(at_day):
+
+    sql_cpu = 'select tenant_id, tenant_name, sum(core) as allocated, count_unit, (avg_core)/count(vm_id) as avg, max(max) as max, count(vm_id) as vm_num ' \
+              'from cpu_util where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    sql_memory = 'select tenant_id, tenant_name, sum(ram) as allocated, count_unit, sum(avg_mem)/sum(ram) as avg, max(max) as max, count(vm_id) as vm_num' \
+                 ' from memory_usage where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    sql_disk_read = 'select tenant_id, tenant_name, count_unit, sum(avg_read)/count(vm_id) as avg, max(max_read) max, count(vm_id) as vm_num ' \
+                    'from disk_read where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    sql_disk_write = 'select tenant_id, tenant_name, count_unit, sum(avg_write)/count(vm_id) as avg, max(max_write) as max, count(vm_id) as vm_num ' \
+                     'from disk_write where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    sql_network_in = 'select tenant_id, tenant_name, count_unit, sum(avg_in)/count(vm_id) as avg, max(max_in) as max, count(vm_id) as vm_num ' \
+                     'from network_in where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    sql_network_out = 'select tenant_id, tenant_name, count_unit, sum(avg_out)/count(vm_id) as avg, max(max_out) as max, count(vm_id) as vm_num ' \
+                      'from network_out where timestamp = \'' + at_day + '\' group by tenant_id'
+
+    if not connection:
+        initialize_connection()
+
+    cursor = connection.cursor(mdb.cursors.DictCursor)
+
+    cursor.execute(sql_cpu)
+    cpu_result = cursor.fetchall()
+
+    cursor.execute(sql_memory)
+    memory_result = cursor.fetchall()
+
+    cursor.execute(sql_disk_read)
+    disk_read_result = cursor.fetchall()
+
+    cursor.execute(sql_disk_write)
+    disk_write_result = cursor.fetchall()
+
+    cursor.execute(sql_network_in)
+    network_in_result = cursor.fetchall()
+
+    cursor.execute(sql_network_out)
+    network_out_result = cursor.fetchall()
+
+    stats = {}
+    for row in cpu_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['cpu']['core'] = int(row['allocated'])
+        record['cpu']['unit'] = row['count_unit']
+        record['cpu']['avg'] = round(row['avg'], 2)
+        record['cpu']['max'] = round(row['max'], 2)
+        record['cpu']['vm_num'] = int(row['vm_num'])
+
+    for row in memory_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['memory']['ram'] = int(row['allocated'])
+        record['memory']['unit'] = row['count_unit']
+        record['memory']['avg'] = round(row['avg'], 2)
+        record['memory']['max'] = round(row['max'], 2)
+        record['memory']['vm_num'] = int(row['vm_num'])
+
+    for row in disk_read_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['disk_read']['unit'] = row['count_unit']
+        record['disk_read']['avg'] = round(row['avg'], 2)
+        record['disk_read']['max'] = round(row['max'], 2)
+        record['disk_read']['vm_num'] = int(row['vm_num'])
+
+    for row in disk_write_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['disk_write']['unit'] = row['count_unit']
+        record['disk_write']['avg'] = round(row['avg'], 2)
+        record['disk_write']['max'] = round(row['max'], 2)
+        record['disk_write']['vm_num'] = int(row['vm_num'])
+
+    for row in network_in_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['network_in']['unit'] = row['count_unit']
+        record['network_in']['avg'] = round(row['avg'], 2)
+        record['network_in']['max'] = round(row['max'], 2)
+        record['network_in']['vm_num'] = int(row['vm_num'])
+
+    for row in network_out_result:
+        key = row['tenant_id']
+        if not stats.get(key):
+            record = __create_tenant_stat_record()
+            record['tenant_id'] = key
+            record['tenant_name'] = row['tenant_name']
+            stats.__setitem__(key, record)
+
+        record = stats.__getitem__(key)
+        record['network_out']['unit'] = row['count_unit']
+        record['network_out']['avg'] = round(row['avg'], 2)
+        record['network_out']['max'] = round(row['max'], 2)
+        record['network_out']['vm_num'] = int(row['vm_num'])
+
+    record_list = []
+    for key in stats.keys():
+        record_list.append(stats[key])
+
+    return record_list
+
+    # print(json.dumps(record_list))
+
+
+def __create_tenant_stat_record():
+    return {
+        'tenant_id': '',
+        'tenant_name': '',
+        'cpu': {
+            'core': 0,
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        },
+        'memory': {
+            'ram': 0,
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        },
+        'disk_read': {
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        },
+        'disk_write': {
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        },
+        'network_in': {
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        },
+        'network_out': {
+            'unit': '',
+            'avg': 0,
+            'max': 0,
+            'vm_num': 0
+        }
+    }
+
+
+
+
+get_tenants_statistics('2015-06-16')
+
 # disk_r = get_disk_read('2015-06-08', '2015-06-20')
 # print(disk_r.__len__())
 # disk_w = get_disk_write('2015-06-08', '2015-06-20')
